@@ -3,12 +3,14 @@ package com.moviesreview.api.controllers;
 import com.moviesreview.api.dto.MovieDto;
 import com.moviesreview.api.dto.MovieGetAllResponse;
 import com.moviesreview.api.services.MovieService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
+@Log4j2
 @RestController
 @RequestMapping("/api/")
 public class MovieController {
@@ -25,6 +27,7 @@ public class MovieController {
             @RequestParam(value = "pageNumb", defaultValue = "0", required = false) int pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "10", required = false) int pageSize
     ){
+        log.info("Fetching all movies, page number: {}, page size: {}", pageNumber, pageSize);
         return new ResponseEntity<>(movieService.getAllMovies(pageNumber, pageSize), HttpStatus.OK);
     }
 

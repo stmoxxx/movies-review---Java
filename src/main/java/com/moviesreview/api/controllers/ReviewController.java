@@ -2,6 +2,7 @@ package com.moviesreview.api.controllers;
 
 import com.moviesreview.api.dto.ReviewDto;
 import com.moviesreview.api.services.ReviewService;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class ReviewController {
         this.reviewService = reviewService;
     }
 
+    @ApiOperation(value = "Mój endpoint do robienia review!", response = Void.class)
     @PostMapping("/movie/{movieId}/review")
     public ResponseEntity<ReviewDto> createReview (@PathVariable(value = "movieId") long movieId, @RequestBody ReviewDto reviewDto){
         return new ResponseEntity<>(reviewService.createReview(movieId, reviewDto), HttpStatus.CREATED);
