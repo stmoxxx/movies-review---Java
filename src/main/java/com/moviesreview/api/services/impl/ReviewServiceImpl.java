@@ -8,12 +8,14 @@ import com.moviesreview.api.models.Review;
 import com.moviesreview.api.repos.MovieRepository;
 import com.moviesreview.api.repos.ReviewRepository;
 import com.moviesreview.api.services.ReviewService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class ReviewServiceImpl implements ReviewService {
 
@@ -35,12 +37,16 @@ public class ReviewServiceImpl implements ReviewService {
         review.setMovie(movie);
 
         Review newReview = reviewRepostory.save(review);
+        log.info("Created review successfully at movie, movieId:{}, reviewDto:{}", movieId,reviewDto);
+
         return mapToDto(newReview);
     }
 
     @Override
     public List<ReviewDto> getReviewsByMovieId(long id) {
         List<Review> reviews = reviewRepostory.findByMovieId(id);
+        log.info("Fetched reviews successfully at movie, movieId:{}", id);
+
         return reviews.stream().map(review -> mapToDto(review)).collect(Collectors.toList());
     }
 
@@ -55,6 +61,9 @@ public class ReviewServiceImpl implements ReviewService {
         if (review.getMovie().getId() != movie.getId()){
             throw new ReviewNotFoundEx("Review doesn't match with movie");
         }
+
+        log.info("Fetched review by id successfully at movie, movieId:{}, review, reviewId:{}", movieId, reviewId);
+
 
         return mapToDto(review);
     }
@@ -78,6 +87,8 @@ public class ReviewServiceImpl implements ReviewService {
 
         Review updatedReview = reviewRepostory.save(review);
 
+        log.info("Updated review successfully at movie, movieId:{}, review, reviewId:{} reviewDto:{}", movieId, reviewId,reviewDto);
+
         return mapToDto(updatedReview);
     }
 
@@ -92,6 +103,8 @@ public class ReviewServiceImpl implements ReviewService {
         if (review.getMovie().getId() != movie.getId()){
             throw new ReviewNotFoundEx("Review doesn't match with movie");
         }
+
+        log.info("Deleted review successfully at movie, movieId:{}, review, reviewId:{}", movieId, reviewId);
 
         reviewRepostory.delete(review);
     }

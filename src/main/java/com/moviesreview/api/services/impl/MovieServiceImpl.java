@@ -6,6 +6,7 @@ import com.moviesreview.api.exceptions.MovieNotFoundEx;
 import com.moviesreview.api.models.Movie;
 import com.moviesreview.api.repos.MovieRepository;
 import com.moviesreview.api.services.MovieService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Log4j2
 @Service
 public class MovieServiceImpl implements MovieService {
 
@@ -41,6 +43,7 @@ public class MovieServiceImpl implements MovieService {
         movieResponse.setType(newMovie.getType());
         movieResponse.setTime(newMovie.getTime());
         movieResponse.setAuthor(newMovie.getAuthor());
+        log.info("Movie has been created successfully, movieDto:{}", movieDto);
         return movieResponse;
     }
 
@@ -59,12 +62,15 @@ public class MovieServiceImpl implements MovieService {
         movieGetAllResponse.setTotalPages(movies.getTotalPages());
         movieGetAllResponse.setLast(movies.isLast());
 
+        log.info("Movies has been fetched successfully");  //movieGetAllResponse:{}", movieGetAllResponse);
+
         return movieGetAllResponse;
     }
 
     @Override
     public MovieDto getMovieById(long id) {
         Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundEx("Movie doesn't exist"));
+        log.info("Movie details fetched successfully, id:{}", id);
         return mapToDto(movie);
     }
 
@@ -72,6 +78,7 @@ public class MovieServiceImpl implements MovieService {
     public void deleteMovie(long id) {
         Movie movie = movieRepository.findById(id).orElseThrow(() -> new MovieNotFoundEx("Movie doesn't exist"));
         movieRepository.delete(movie);
+        log.info("Movie has been deleted successfully by id, id:{}", id);
     }
 
 
@@ -84,6 +91,7 @@ public class MovieServiceImpl implements MovieService {
         movie.setAuthor(movieDto.getAuthor());
 
         Movie movieUpdated = movieRepository.save(movie);
+        log.info("Movie has been updated successfully by id, id:{}, movieDto:{}", id, movieDto);
         return mapToDto(movieUpdated);
     }
 
